@@ -1,0 +1,1 @@
+#! Need to change all scripts to its own classes and refactor entire pipeline here so that I can run the main docker referecing this file only
