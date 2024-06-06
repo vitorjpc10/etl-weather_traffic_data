@@ -30,9 +30,9 @@ class Transform:
         visibility = data.get('visibility', None)
 
         # Extracting other relevant information
-        timestamp = data.get('dt', None)
-        sunrise = data['sys'].get('sunrise', None)
-        sunset = data['sys'].get('sunset', None)
+        timestamp = datetime.utcfromtimestamp(data.get('dt')).strftime('%Y-%m-%dT%H:%M:%S')
+        sunrise = datetime.utcfromtimestamp(data['sys'].get('sunrise')).strftime('%Y-%m-%dT%H:%M:%S')
+        sunset = datetime.utcfromtimestamp(data['sys'].get('sunset')).strftime('%Y-%m-%dT%H:%M:%S')
         name = data.get('name', None)
         country = data['sys'].get('country', None)
         wind_speed = data['wind'].get('speed', None)
@@ -54,9 +54,9 @@ class Transform:
             'visibility': visibility,
             'wind_speed': wind_speed,
             'wind_degree_direction': wind_degree_direction,
-            'timestamp': datetime.utcfromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S') if timestamp else None,
-            'sunrise': datetime.utcfromtimestamp(sunrise).strftime('%Y-%m-%d %H:%M:%S') if sunrise else None,
-            'sunset': datetime.utcfromtimestamp(sunset).strftime('%Y-%m-%d %H:%M:%S') if sunset else None
+            'timestamp': datetime.strptime(timestamp, '%Y-%m-%dT%H:%M:%S') if timestamp else None,
+            'sunrise': datetime.strptime(sunrise, '%Y-%m-%dT%H:%M:%S') if sunrise else None,
+            'sunset': datetime.strptime(sunset, '%Y-%m-%dT%H:%M:%S') if sunset else None
         }
 
         return weather_info
@@ -83,7 +83,7 @@ class Transform:
         geometry = route.get('geometry', None)
 
         formatted_traffic_data = {
-            'start_time': datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S'),
+            'start_time': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%S'),
             'origin_latitude': origin[1],
             'origin_longitude': origin[0],
             'destination_latitude': destination[1],

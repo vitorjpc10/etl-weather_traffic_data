@@ -44,6 +44,9 @@ def main():
     # Initialize Loader
     load = Loading()
 
+    load.create_table_if_not_exists("traffic")
+    load.create_table_if_not_exists("weather")
+
     # Load weather data
     logging.info("Loading weather data...")
     load.load_data(weather_data_formatted, "weather")
@@ -53,6 +56,8 @@ def main():
     logging.info("Loading traffic data...")
     load.load_data(traffic_data_formatted, "traffic")
     logging.info("Traffic data loaded successfully.")
+
+    load.close_spark()
 
     logging.info("ETL PROCESSED SUCCESSFULLY")
 
