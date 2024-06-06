@@ -1,26 +1,57 @@
 import requests
+import os
 
-# OpenWeatherMap API
-weather_api_key = 'your_openweather_api_key'
-weather_url = 'http://api.openweathermap.org/data/2.5/weather'
 
-# Google Maps API
-maps_api_key = 'your_google_maps_api_key'
-maps_url = 'https://maps.googleapis.com/maps/api/directions/json'
+class Extract:
 
-def get_weather(city):
-    params = {'q': city, 'appid': weather_api_key, 'units': 'metric'}
-    response = requests.get(weather_url, params=params)
-    return response.json()
+    def __init__(self):
+        # OpenWeatherMap API
+        self.weather_api_key = os.getenv('WEATHER_API_KEY')
+        if not self.weather_api_key:
+            raise EnvironmentError("WEATHER_API_KEY environment variable is not set. Unable to call OpenWeatherAPI.")
+        self.weather_url = 'http://api.openweathermap.org/data/2.5/weather'
 
-def get_traffic(origin, destination):
-    params = {'origin': origin, 'destination': destination, 'key': maps_api_key}
-    response = requests.get(maps_url, params=params)
-    return response.json()
+        # OSRM (Traffic) API
+        self.maps_url = 'http://router.project-osrm.org/route/v1/driving/'
 
-# Example usage
-weather_data = get_weather('New York')
-traffic_data = get_traffic('New York, NY', 'Los Angeles, CA')
+    def get_weather(self, latitude, longitude, exclude=None, units='metric', lang=None):
+        params = {
+            'lon': longitude,
+            'lat': latitude,
+            'appid': self.weather_api_key,
+            'units': units
+        }
+        if exclude:
+            params['exclude'] = exclude
+        if lang:
+            params['lang'] = lang
 
-print(weather_data)
-print(traffic_data)
+        response = requests.get(self.weather_url, params=params)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            raise Exception(f"Error Occurred calling weather API.\n"
+                            f"Error: {response.status_code}, 'message': {response.reason}")
+
+    def get_traffic(self, start_coords, end_coords):
+        coordinates = f"{start_coords[0]},{start_coords[1]};{end_coords[0]},{end_coords[1]}"
+        url = f"{self.maps_url}{coordinates}"
+        response = requests.get(url)
+
+        if response.status_code == 200:
+            return response.json()
+        else:
+            raise Exception(f"Error Occurred calling traffic API.\n"
+                            f"Error: {response.status_code}, 'message': {response.reason}")
+
+
+
+
+# extract = Extract()
+#
+# # Example usage
+# weather_data = extract.get_weather(latitude=33.44, longitude=-94.04, exclude='hourly,daily', units='metric', lang='en')
+# traffic_data = extract.get_traffic(start_coords=(40.712776, -74.005974), end_coords=(34.052235, -118.243683))
+#
+# print(weather_data)
+# print(traffic_data)

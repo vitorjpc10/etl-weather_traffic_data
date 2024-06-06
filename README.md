@@ -1,0 +1,1 @@
+1. Set enviroment variables for api keys (DECIDE ENV_NAME for extract script class) http://api.openweathermap.org/data/2.5/weather

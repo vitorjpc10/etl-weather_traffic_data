@@ -19,7 +19,6 @@ services:
       - POSTGRES_PASSWORD=your_password
       - POSTGRES_DB=your_db
       - POSTGRES_HOST=db
-    command: python scripts/db_setup.py
 
 volumes:
   db_data:

@@ -1,30 +1,28 @@
-from pyspark.shell import sql
-from sqlalchemy_utils.types.pg_composite import psycopg2
-
-from scripts.data_transformation import weather_df, traffic_df
+from pyspark.sql import SparkSession
 
 
-def insert_weather_data(conn, df):
-    cur = conn.cursor()
-    for _, row in df.iterrows():
-        cur.execute(
-            sql.SQL("INSERT INTO weather (dt, temperature, humidity, description) VALUES (%s, %s, %s, %s)"),
-            (row['dt'], row['temperature'], row['humidity'], row['description'])
-        )
-    conn.commit()
-    cur.close()
+class Loading:
+    def load_data(self, data: dict, table_name: str):
+        # Initialize SparkSession
+        spark = SparkSession.builder \
+            .appName("PostgreSQL Connection") \
+            .config("spark.jars.packages", "org.postgresql:postgresql:42.7.3") \
+            .getOrCreate()
 
-def insert_traffic_data(conn, df):
-    cur = conn.cursor()
-    for _, row in df.iterrows():
-        cur.execute(
-            sql.SQL("INSERT INTO traffic (start_time, distance, duration) VALUES (%s, %s, %s)"),
-            (row['start_time'], row['distance'], row['duration'])
-        )
-    conn.commit()
-    cur.close()
+        # Create DataFrame from the provided data
+        df = spark.createDataFrame([data])
 
-conn = psycopg2.connect(dbname="your_db", user="your_user", password="your_password", host="your_host")
-insert_weather_data(conn, weather_df)
-insert_traffic_data(conn, traffic_df)
-conn.close()
+        # Define PostgreSQL connection properties
+        postgres_url = "jdbc:postgresql://localhost:5432/postgres_db" #! CHANGE THIS TO READ ENV VARIABLES INSTEAD
+        properties = {
+            "user": "postgres", #! CHANGE THIS TO READ ENV VARIABLES INSTEAD
+            "password": "admin",
+            "driver": "org.postgresql.Driver"
+        }
+
+        # Write DataFrame to PostgreSQL
+        df.write.jdbc(url=postgres_url, table=table_name, mode="append",
+                      properties=properties)
+
+        # Stop SparkSession
+        spark.stop()
