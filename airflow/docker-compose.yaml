@@ -5,7 +5,7 @@ x-airflow-common:
   environment:
     &airflow-common-env
     AIRFLOW__CORE__EXECUTOR: LocalExecutor
-    AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
     AIRFLOW__CORE__FERNET_KEY: ''
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
     AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
@@ -20,7 +20,6 @@ x-airflow-common:
     - ./dags:/opt/airflow/dags
     - ./logs:/opt/airflow/logs
     - ./plugins:/opt/airflow/plugins
-#  user: "${AIRFLOW_UID:-50000}:${AIRFLOW_GID:-50000}"
   depends_on:
     postgres:
       condition: service_healthy
@@ -47,17 +46,13 @@ services:
       interval: 5s
       retries: 5
     restart: always
-    deploy:
-      resources:
-        limits:
-          memory: 1G
 
   airflow-init:
     <<: *airflow-common
     command: version
     environment:
       <<: *airflow-common-env
-      _AIRFLOW_DB_UPGRADE: 'true'
+      _AIRFLOW_DB_MIGRATE: 'true'
       _AIRFLOW_WWW_USER_CREATE: 'true'
       _AIRFLOW_WWW_USER_USERNAME: ${_AIRFLOW_WWW_USER_USERNAME:-admin}
       _AIRFLOW_WWW_USER_PASSWORD: ${_AIRFLOW_WWW_USER_PASSWORD:-admin}
@@ -73,11 +68,19 @@ services:
       timeout: 10s
       retries: 5
     restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 2G  # Increase this to a higher value
 
   airflow-scheduler:
     <<: *airflow-common
     command: scheduler
     restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 2G  # Increase this to a higher value
 
 volumes:
   postgres-db-volume:

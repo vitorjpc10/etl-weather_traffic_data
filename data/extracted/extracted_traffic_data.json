@@ -1,0 +1,41 @@
+{
+    "code": "Ok",
+    "routes": [
+        {
+            "geometry": "}qnwFdfubMixeAd_oGsaF`ad`@m_}Bx|ia@nmkAzkqOqn`A~isWrhf@tcnMnhdCppeFra[lw~MojyA~lqI|vFrf}Xgs_C|e_Gk{EdbjD`nhBpmlUz_fBfoxA{eBfdmNi{gA~j`E`s`Bri}Ii|oApbsCvjrG|a{Hrf|A|inIpiiGzfbH",
+            "legs": [
+                {
+                    "steps": [],
+                    "summary": "",
+                    "weight": 184508.1,
+                    "duration": 184508.1,
+                    "distance": 4684173.3
+                }
+            ],
+            "weight_name": "routability",
+            "weight": 184508.1,
+            "duration": 184508.1,
+            "distance": 4684173.3
+        }
+    ],
+    "waypoints": [
+        {
+            "hint": "9Y91g____38jAAAAKgAAADUAAAAAAAAA62L7QdAvyUC8ID5CAAAAACMAAAAqAAAANQAAAAAAAADvYgAAh8OW-9k3bQIQwpb7YDptAgcAbw8C4x9L",
+            "distance": 78.523332287,
+            "name": "Centre Street",
+            "location": [
+                -74.005625,
+                40.712153
+            ]
+        },
+        {
+            "hint": "GKhthP___38XAAAAGQAAAEoAAAAGAAAAgOEtQm0fCkDdFFNCwQkxQRcAAAAZAAAASgAAAAYAAADvYgAABge0-FtmQAI4B7T4NGZAAgIAzwIC4x9L",
+            "distance": 6.175896726,
+            "name": "Market Street",
+            "location": [
+                -122.41945,
+                37.774939
+            ]
+        }
+    ]
+}

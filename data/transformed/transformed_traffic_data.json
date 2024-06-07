@@ -1,0 +1,13 @@
+{
+    "start_time": "2024-06-07T19:44:38",
+    "origin_latitude": 40.712153,
+    "origin_longitude": -74.005625,
+    "destination_latitude": 37.774939,
+    "destination_longitude": -122.41945,
+    "origin_name": "Centre Street",
+    "destination_name": "Market Street",
+    "distance": 4684173.3,
+    "duration": 184508.1,
+    "geometry": "}qnwFdfubMixeAd_oGsaF`ad`@m_}Bx|ia@nmkAzkqOqn`A~isWrhf@tcnMnhdCppeFra[lw~MojyA~lqI|vFrf}Xgs_C|e_Gk{EdbjD`nhBpmlUz_fBfoxA{eBfdmNi{gA~j`E`s`Bri}Ii|oApbsCvjrG|a{Hrf|A|inIpiiGzfbH",
+    "route_coordinates": "[(40.71215, -74.00563), (41.0746, -75.3983), (41.11086, -80.83095), (41.75605, -86.45748), (41.36461, -89.17314), (41.6999, -93.20946), (41.49868, -95.58077), (40.8162, -96.76118), (40.67242, -99.21757), (41.13506, -100.95037), (41.09539, -105.20119), (41.75399, -106.51302), (41.78925, -107.38905), (41.24924, -111.06242), (40.72174, -111.5207), (40.7382, -114.05082), (41.11137, -115.0409), (40.61152, -116.8346), (41.02581, -117.59293), (39.61593, -119.21132), (39.13855, -120.92827), (37.77494, -122.41945)]"
+}
