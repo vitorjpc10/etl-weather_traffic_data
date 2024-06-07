@@ -46,7 +46,7 @@ Set the environment variables for API keys in the `docker-compose` files. Obtain
 
 7. To generate the pivoted report, access the PostgreSQL database and execute the `query.sql` SQL file:
     ```bash
-    docker exec -it etl-weather_traffic_data-db-1 psql -U postgres -c "\i query.sql"
+    docker exec -it etl-gdp-of-south-american-countries-using-the-world-bank-api-db-1 psql -U postgres -c "\i query.sql"
     ```
 
 ### ETL with Orchestrator (Apache Airflow)
@@ -56,19 +56,16 @@ Set the environment variables for API keys in the `docker-compose` files. Obtain
     cd airflow
     ```
 
-5. Initialize airflow container then build remaining containers:
+5. Build and run the Docker containers:
     ```bash
-    docker-compose up airflow-init
-    ```
-   ```bash
-    docker-compose up
+    docker-compose up --build
     ```
 
 6. Once all containers are built access local (http://localhost:8080/) and trigger etl_dag DAG (username and password are admin by default)
 
 7. Once DAG compiles successfully, run the following command to execute queries on both weather and traffic tables:
     ```bash
-    docker exec -it airflow-postgres-1 psql -U airflow -c "\i queries/queries.sql"
+    docker exec -it etl-weather_traffic_data-db-1 psql -U airflow -c "\i queries/queries.sql"
     ```
    Do `\q` in terminal to quit query, there are 2 queries in total.
 
@@ -81,5 +78,5 @@ Set the environment variables for API keys in the `docker-compose` files. Obtain
 - The SQL queries for generating reports are stored in separate files (e.g., `queries.sql`). This allows for easy modification of the queries and provides a convenient way to preview the results.
 - To generate the reports, the SQL queries are executed within the PostgreSQL database container. This approach simplifies the process and ensures that the queries can be easily run and modified as needed.
 
-## Output Sample
-
+## Airflow Sample DAG
+![img.png](img.png)
