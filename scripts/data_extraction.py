@@ -43,15 +43,3 @@ class Extract:
         else:
             raise Exception(f"Error Occurred calling traffic API.\n"
                             f"Error: {response.status_code}, 'message': {response.reason}")
-
-
-
-
-# extract = Extract()
-#
-# # Example usage
-# weather_data = extract.get_weather(latitude=33.44, longitude=-94.04, exclude='hourly,daily', units='metric', lang='en')
-# traffic_data = extract.get_traffic(start_coords=(40.712776, -74.005974), end_coords=(34.052235, -118.243683))
-#
-# print(weather_data)
-# print(traffic_data)

@@ -1,19 +1,23 @@
 import logging
-import json
 import os
+import json
+import sys
+from datetime import datetime, timedelta
+from airflow import DAG
+from airflow.operators.python import PythonOperator
+from scripts.data_extraction import Extract
+from scripts.data_transformation import Transform
+from scripts.data_loading import Loading
 
-from data_extraction import Extract
-from data_transformation import Transform
-from data_loading import Loading
+# Add the scripts directory to the sys.path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'scripts')))
 
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-def main():
-    # Configure logging
-    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-
+def extract_data():
     base_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
     extracted_path = os.path.join(base_path, 'data', 'extracted')
-    transformed_path = os.path.join(base_path, 'data', 'transformed')
 
     # Initialize Extractor
     extract = Extract()
@@ -31,6 +35,18 @@ def main():
     write_dict_to_file(weather_data, os.path.join(extracted_path, 'extracted_weather_data.json'))
     write_dict_to_file(traffic_data, os.path.join(extracted_path, 'extracted_traffic_data.json'))
 
+def transform_data():
+    base_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    extracted_path = os.path.join(base_path, 'data', 'extracted')
+    transformed_path = os.path.join(base_path, 'data', 'transformed')
+
+    # Load extracted data
+    with open(os.path.join(extracted_path, 'extracted_weather_data.json'), 'r') as file:
+        weather_data = json.load(file)
+
+    with open(os.path.join(extracted_path, 'extracted_traffic_data.json'), 'r') as file:
+        traffic_data = json.load(file)
+
     # Initialize Transformer
     transform = Transform()
 
@@ -46,6 +62,17 @@ def main():
 
     write_dict_to_file(weather_data_formatted, os.path.join(transformed_path, 'transformed_weather_data.json'))
     write_dict_to_file(traffic_data_formatted, os.path.join(transformed_path, 'transformed_traffic_data.json'))
+
+def load_data():
+    base_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    transformed_path = os.path.join(base_path, 'data', 'transformed')
+
+    # Load transformed data
+    with open(os.path.join(transformed_path, 'transformed_weather_data.json'), 'r') as file:
+        weather_data_formatted = json.load(file)
+
+    with open(os.path.join(transformed_path, 'transformed_traffic_data.json'), 'r') as file:
+        traffic_data_formatted = json.load(file)
 
     # Initialize Loader
     load = Loading()
@@ -81,5 +108,34 @@ def write_dict_to_file(data_dict, file_path):
     except Exception as e:
         raise Exception(f"Failed to write dictionary to {file_path}: {e}")
 
-if __name__ == "__main__":
-    main()
+# Define DAG
+default_args = {
+    'owner': 'coder2j',
+    'retries': 5,
+    'retry_delay': timedelta(minutes=5)
+}
+
+with DAG(
+        default_args=default_args,
+        dag_id='data_etl_dag',
+        description='A DAG for extracting, transforming, and loading data',
+        start_date=datetime(2024, 6, 7),
+        schedule_interval='@daily'
+) as dag:
+
+    extract_task = PythonOperator(
+        task_id='extract_data',
+        python_callable=extract_data
+    )
+
+    transform_task = PythonOperator(
+        task_id='transform_data',
+        python_callable=transform_data
+    )
+
+    load_task = PythonOperator(
+        task_id='load_data',
+        python_callable=load_data
+    )
+
+    extract_task >> transform_task >> load_task
