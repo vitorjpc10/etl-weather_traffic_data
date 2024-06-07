@@ -56,9 +56,12 @@ Set the environment variables for API keys in the `docker-compose` files. Obtain
     cd airflow
     ```
 
-5. Build and run the Docker containers:
+5. Initialize airflow container then build remaining containers:
     ```bash
-    docker-compose up --build
+    docker-compose up airflow-init
+    ```
+   ```bash
+    docker-compose up
     ```
 
 6. Once all containers are built access local (http://localhost:8080/) and trigger etl_dag DAG (username and password are admin by default)
