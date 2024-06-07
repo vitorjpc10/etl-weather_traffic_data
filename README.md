@@ -46,7 +46,7 @@ Set the environment variables for API keys in the `docker-compose` files. Obtain
 
 7. To generate the pivoted report, access the PostgreSQL database and execute the `query.sql` SQL file:
     ```bash
-    docker exec -it etl-gdp-of-south-american-countries-using-the-world-bank-api-db-1 psql -U postgres -c "\i query.sql"
+    docker exec -it etl-weather_traffic_data-db-1 psql -U postgres -c "\i query.sql"
     ```
 
 ### ETL with Orchestrator (Apache Airflow)
@@ -68,7 +68,7 @@ Set the environment variables for API keys in the `docker-compose` files. Obtain
 
 7. Once DAG compiles successfully, run the following command to execute queries on both weather and traffic tables:
     ```bash
-    docker exec -it etl-weather_traffic_data-db-1 psql -U airflow -c "\i queries/queries.sql"
+    docker exec -it airflow-postgres-1 psql -U airflow -c "\i queries/queries.sql"
     ```
    Do `\q` in terminal to quit query, there are 2 queries in total.
 
