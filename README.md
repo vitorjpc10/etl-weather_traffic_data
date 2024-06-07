@@ -17,51 +17,53 @@ Set the environment variables for API keys in the `docker-compose` files. Obtain
 
 ### Steps to Run
 
-1. Clone the repository:
+1. Set environment variables for api keys in docker-compose files (https://home.openweathermap.org/api_keys)
+
+2. Clone the repository:
     ```bash
     git clone https://github.com/vitorjpc10/etl-weather_traffic_data.git
     ```
-2. Move to the newly cloned repository:
+3. Move to the newly cloned repository:
     ```bash
     cd etl-weather_traffic_data
     ```
 
 ### ETL without Orchestrator (Python Docker)
 
-3. Build and run the Docker containers:
+4. Build and run the Docker containers:
     ```bash
     docker-compose up --build
     ```
 
-4. The data will be extracted, transformed, and loaded into the PostgreSQL database based on the logic in `scripts/main.py`.
+5. The data will be extracted, transformed, and loaded into the PostgreSQL database based on the logic in `scripts/main.py`.
 
-5. Once built, run the following command to execute queries on both weather and traffic tables:
+6. Once built, run the following command to execute queries on both weather and traffic tables:
     ```bash
     docker exec -it etl-weather_traffic_data-db-1 psql -U postgres -c "\i queries/queries.sql"
     ```
-   
+
    Do `\q` in terminal to quit query, there are 2 queries in total.
 
-6. To generate the pivoted report, access the PostgreSQL database and execute the `query.sql` SQL file:
+7. To generate the pivoted report, access the PostgreSQL database and execute the `query.sql` SQL file:
     ```bash
     docker exec -it etl-gdp-of-south-american-countries-using-the-world-bank-api-db-1 psql -U postgres -c "\i query.sql"
     ```
 
 ### ETL with Orchestrator (Apache Airflow)
 
-3. Move to the Airflow directory:
+4. Move to the Airflow directory:
     ```bash
     cd airflow
     ```
 
-4. Build and run the Docker containers:
+5. Build and run the Docker containers:
     ```bash
     docker-compose up --build
     ```
 
-5. Once all containers are built access local (http://localhost:8080/) and trigger etl_dag DAG (username and password are admin by default)
+6. Once all containers are built access local (http://localhost:8080/) and trigger etl_dag DAG (username and password are admin by default)
 
-6. Once DAG compiles successfully, run the following command to execute queries on both weather and traffic tables:
+7. Once DAG compiles successfully, run the following command to execute queries on both weather and traffic tables:
     ```bash
     docker exec -it etl-weather_traffic_data-db-1 psql -U airflow -c "\i queries/queries.sql"
     ```
