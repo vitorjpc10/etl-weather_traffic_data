@@ -1,5 +1,7 @@
 # ETL Data Pipeline for Weather and Traffic Data
 
+### Readme em português estará aqui: [README Português](README-PT.md)
+
 ## Description
 This project extracts weather data from the OpenWeatherMap API and traffic data from the OSRM API, transforms and cleans the data, and loads it into a PostgreSQL database. Queries are then executed to generate reports based on the extracted data.
 
